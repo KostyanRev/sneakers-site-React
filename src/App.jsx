@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
-import Card from './components/Card/Card';
+import Home from './pages/Home';
 import Drawer from './components/Drawer';
 import Header from './components/Header';
+import Favourites from './pages/Favourites';
 
+import { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import axios from 'axios';
 
@@ -24,6 +25,11 @@ function App() {
       .then(({ data }) => {
         setCartItems(data);
       });
+    axios
+      .get('https://651131d4829fa0248e3fa10f.mockapi.io/favourites')
+      .then(({ data }) => {
+        setFavourites(data);
+      });
   }, []);
 
   const onAddToCart = (obj) => {
@@ -32,8 +38,16 @@ function App() {
   };
 
   const onAddToFavourite = (obj) => {
-    axios.post('https://651131d4829fa0248e3fa10f.mockapi.io/favourites', obj);
-    setFavourites((prev) => [...prev, obj]);
+    if (favourites.find((favObj) => favObj.id === obj.id)) {
+      axios.delete(
+        `https://651131d4829fa0248e3fa10f.mockapi.io/favourites/${obj.id}`
+      );
+      setFavourites((prev) => prev.filter((item) => item.id !== obj.id));
+    } else {
+      axios
+        .post('https://651131d4829fa0248e3fa10f.mockapi.io/favourites', obj)
+        .then(setFavourites((prev) => [...prev, obj]));
+    }
   };
 
   const onRemoveItem = (id) => {
@@ -61,49 +75,30 @@ function App() {
       <Header onClickCart={() => setCartOpened(true)} />
 
       <Routes>
-        <Route exact path="/favourites" element="TEST" />
-      </Routes>
-
-      <div className="content p-40">
-        <div className="d-flex align-center justify-between mb-40">
-          <h1>{searchValue ? `Searching: ${searchValue}` : 'All sneakers'}</h1>
-          <div className="search-block d-flex">
-            <img src="/img/search.svg" alt="Search" />
-            {searchValue && (
-              <img
-                onClick={clearInput}
-                className="clear cu-p"
-                src="/img/btn-remove.svg"
-                alt="Clear"
-              />
-            )}
-            <input
-              value={searchValue}
-              onChange={onChangeSearchInput}
-              type="text"
-              placeholder="Search..."
+        <Route
+          exact
+          path="/"
+          element={
+            <Home
+              searchValue={searchValue}
+              clearInput={clearInput}
+              onChangeSearchInput={onChangeSearchInput}
+              items={items}
+              onAddToFavourite={onAddToFavourite}
+              onAddToCart={onAddToCart}
             />
-          </div>
-        </div>
-        <div className="d-flex flex-wrap">
-          {items
-            .filter((item) =>
-              item.name.toLowerCase().includes(searchValue.toLowerCase())
-            )
-            .map((item, idx) => {
-              return (
-                <Card
-                  key={idx}
-                  title={item.name}
-                  price={item.price}
-                  imageUrl={item.imageUrl}
-                  onFavourite={(obj) => onAddToFavourite(obj)}
-                  onPlus={(obj) => onAddToCart(obj)}
-                />
-              );
-            })}
-        </div>
-      </div>
+          }
+        />
+        <Route
+          path="/favourites"
+          element={
+            <Favourites
+              items={favourites}
+              onAddToFavourite={onAddToFavourite}
+            />
+          }
+        />
+      </Routes>
     </div>
   );
 }
