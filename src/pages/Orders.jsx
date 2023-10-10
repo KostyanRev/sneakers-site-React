@@ -1,11 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 import Card from '../components/Card/Card';
-import AppContext from '../context';
+import EmptyPage from '../components/EmptyPage';
 
 const Orders = () => {
-  const { onAddToFavourite, onAddToCart } = useContext(AppContext);
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -27,14 +26,22 @@ const Orders = () => {
   return (
     <div className="content p-40">
       <div className="d-flex align-center justify-between mb-40">
-        <h1>My orders</h1>
+        <h1 className="title-size">My orders</h1>
       </div>
 
-      <div className="d-flex flex-wrap">
-        {(isLoading ? [...Array(8)] : orders).map((item, idx) => (
-          <Card key={idx} loading={isLoading} {...item} />
-        ))}
-      </div>
+      {orders.length > 0 ? (
+        <div className="cardItems d-flex flex-wrap">
+          {(isLoading ? [...Array(8)] : orders).map((item, idx) => (
+            <Card key={idx} loading={isLoading} {...item} />
+          ))}
+        </div>
+      ) : (
+        <EmptyPage
+          title={`You don't have any orders`}
+          description={'Make at least one order'}
+          image={'/img/smile-for-orders.png'}
+        />
+      )}
     </div>
   );
 };

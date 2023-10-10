@@ -9,7 +9,7 @@ const Header = (props) => {
   return (
     <header className="d-flex justify-between align-center p-40">
       <Link to="/">
-        <div className="headerLeft d-flex align-center">
+        <div className="header-title d-flex align-center">
           <img width={40} height={40} src="/img/logo.png" alt="logo" />
           <div>
             <h3 className="text-uppercase">Sneakers React</h3>

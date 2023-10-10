@@ -28,8 +28,10 @@ const Home = ({
 
   return (
     <div className="content p-40">
-      <div className="d-flex align-center justify-between mb-40">
-        <h1>{searchValue ? `Searching: ${searchValue}` : 'All sneakers'}</h1>
+      <div className="content-header d-flex align-center justify-between mb-40">
+        <h1 className="title-size">
+          {searchValue ? `Searching: ${searchValue}` : 'All sneakers'}
+        </h1>
         <div className="search-block d-flex">
           <img src="/img/search.svg" alt="Search" />
           {searchValue && (
@@ -48,7 +50,7 @@ const Home = ({
           />
         </div>
       </div>
-      <div className="d-flex flex-wrap">{renderItems()}</div>
+      <div className="cardItems d-flex flex-wrap">{renderItems()}</div>
     </div>
   );
 };

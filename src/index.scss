@@ -1,5 +1,5 @@
 body {
-  margin: 0;
+  margin: 10px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #e7f6ff;
@@ -29,9 +29,49 @@ header {
   }
 }
 
+@media (max-width: 560px) {
+  header {
+    flex-wrap: wrap;
+    flex-direction: column;
+  }
+  .header-title {
+    margin-bottom: 30px;
+  }
+}
+
+@media (max-width: 340px) {
+  .header-title {
+    h3 {
+      font-size: 18px;
+    }
+    p {
+      font-size: 14px;
+    }
+  }
+  .title-size {
+    font-size: 30px;
+  }
+}
+
 .content {
   h1 {
     margin: 0;
+    word-break: break-all;
+  }
+}
+
+@media (max-width: 560px) {
+  .content-header {
+    flex-direction: column;
+    h1 {
+      margin-bottom: 15px;
+    }
+  }
+}
+
+@media (max-width: 765px) {
+  .cardItems {
+    justify-content: space-around;
   }
 }
 
