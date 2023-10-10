@@ -1,13 +1,15 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 
-import Info from './Info';
-import AppContext from '../context';
+import Info from '../Info';
+import { useCart } from '../../hooks/useCart';
+
+import styles from './Drawer.module.scss';
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-function Drawer({ onRemove, onClose, items = [] }) {
-  const { cartItems, setCartItems } = useContext(AppContext);
+function Drawer({ onRemove, onClose, items = [], opened }) {
+  const { cartItems, setCartItems, totalPrice } = useCart();
   const [orderId, setOrderId] = useState(null);
   const [isOrderComplete, setIsOrderComplete] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -39,8 +41,8 @@ function Drawer({ onRemove, onClose, items = [] }) {
   };
 
   return (
-    <div className="overlay">
-      <div className="drawer">
+    <div className={`${styles.overlay} ${opened ? styles.overlayVisible : ''}`}>
+      <div className={styles.drawer}>
         <h2 className="d-flex justify-between mb-30">
           Shopping cart
           <img
@@ -53,7 +55,7 @@ function Drawer({ onRemove, onClose, items = [] }) {
 
         {items.length > 0 ? (
           <div className="d-flex flex-column flex">
-            <div className="items">
+            <div className="items flex">
               {items.map((obj, idx) => (
                 <div key={idx} className="cartItem d-flex align-center mb-20">
                   <div
@@ -77,12 +79,12 @@ function Drawer({ onRemove, onClose, items = [] }) {
                 <li>
                   <span>Total:</span>
                   <div></div>
-                  <b>21 498 usd</b>
+                  <b>{totalPrice} usd</b>
                 </li>
                 <li>
                   <span>Tax 5%:</span>
                   <div></div>
-                  <b>1074 usd</b>
+                  <b>{(totalPrice * 0.05).toFixed(2)} usd</b>
                 </li>
               </ul>
               <button

@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import ContentLoader from 'react-content-loader';
 
 import AppContext from '../../context';
+
 import styles from './Card.module.scss';
 
 const Card = ({
@@ -16,13 +17,14 @@ const Card = ({
 }) => {
   const { isItemAdded } = useContext(AppContext);
   const [isFavourite, setIsFavourite] = useState(favourited);
+  const itemObj = { id, parentId: id, imageUrl, name, price };
 
   const onClickPlus = () => {
-    onPlus({ id, imageUrl, name, price });
+    onPlus(itemObj);
   };
 
   const onClickFavourite = () => {
-    onFavourite({ id, imageUrl, name, price });
+    onFavourite(itemObj);
     setIsFavourite(!isFavourite);
   };
 
@@ -45,13 +47,17 @@ const Card = ({
       ) : (
         <>
           <div className={styles.favourite}>
-            <img
-              onClick={onClickFavourite}
-              src={
-                isFavourite ? '/img/heart-liked.svg' : '/img/heart-unliked.svg'
-              }
-              alt="Unliked"
-            />
+            {onFavourite && (
+              <img
+                onClick={onClickFavourite}
+                src={
+                  isFavourite
+                    ? '/img/heart-liked.svg'
+                    : '/img/heart-unliked.svg'
+                }
+                alt="Unliked"
+              />
+            )}
           </div>
           <img width={133} height={112} src={imageUrl} alt="sneakers" />
           <h5 className="">{name}</h5>
@@ -60,14 +66,16 @@ const Card = ({
               <span>Price:</span>
               <b>{price} usd</b>
             </div>
-            <img
-              className={styles.plus}
-              onClick={onClickPlus}
-              src={
-                isItemAdded(id) ? '/img/btn-checked.svg' : '/img/btn-plus.svg'
-              }
-              alt="plus"
-            />
+            {onPlus && (
+              <img
+                className={styles.plus}
+                onClick={onClickPlus}
+                src={
+                  isItemAdded(id) ? '/img/btn-checked.svg' : '/img/btn-plus.svg'
+                }
+                alt="plus"
+              />
+            )}
           </div>
         </>
       )}
